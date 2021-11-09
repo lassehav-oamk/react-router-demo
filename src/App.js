@@ -1,24 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import Home from './Home';
+import SecondView from './SecondView'
+import ContactList from './ContactList'
+import ContactDetailView from './ContactDetailView'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import ContactData from './data.json';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
+
+  const contacts = ContactData.map(contact => {
+    return { ...contact, id: uuidv4() }
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div>
+        <div className="navbar">
+          <Link to="/"><div>Home</div></Link>
+          <Link to="/contacts"><div>Contact List</div></Link>
+        </div>
+        <Routes>
+          <Route path="/" element={ <Home /> } />
+          <Route path="/secondview" element={ <SecondView /> } />
+          <Route path="/contacts" element={ <ContactList contacts={ contacts }/> } >
+            <Route path=":contactId" element={ <ContactDetailView contacts={ contacts } /> } />
+          </Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
